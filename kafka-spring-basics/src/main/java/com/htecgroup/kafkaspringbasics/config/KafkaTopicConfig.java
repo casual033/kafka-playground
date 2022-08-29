@@ -24,6 +24,6 @@ public class KafkaTopicConfig {
 
   @Bean
   public NewTopic dataIngestionTopic() {
-    return new NewTopic(testTopic, 1, replicationFactor);
+    return new NewTopic(testTopic, partitionCount, replicationFactor);
   }
 }
