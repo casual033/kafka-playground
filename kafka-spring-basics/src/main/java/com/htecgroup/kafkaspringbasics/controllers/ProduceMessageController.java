@@ -20,7 +20,7 @@ public class ProduceMessageController {
 
   @PostMapping(value = "/basic", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity produceMessage(@RequestBody String message) {
-    basicProducer.send(message);
+    basicProducer.send("defaultKey", message);
     return ResponseEntity.ok().build();
   }
 }

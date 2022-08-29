@@ -22,10 +22,10 @@ public class BasicProducer {
     this.topic = topic;
   }
 
-  public void send(String message) {
+  public void send(String messageKey, String messageValue) {
     try {
-      log.info("Topic: {}, Sending message {}", topic, message);
-      kafkaOperations.send(topic, message);
+      log.info("Topic: {}, Sending message {}", topic, messageValue);
+      kafkaOperations.send(topic, messageKey, messageValue);
     } catch (Exception e) {
       throw new RetryException(e.getMessage());
     }

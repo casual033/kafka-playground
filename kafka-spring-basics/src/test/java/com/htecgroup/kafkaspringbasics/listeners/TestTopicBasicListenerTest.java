@@ -28,7 +28,7 @@ class TestTopicBasicListenerTest {
     int messageCount = 0;
     for (int i = 0; i < 10; i++) {
       messageCount++;
-      producer.send(testMessage + messageCount);
+      producer.send("testKey", testMessage + messageCount);
     }
 
     Thread.sleep(10000);
