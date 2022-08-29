@@ -1,0 +1,19 @@
+#kafka.auto.offset.reset: earliest
+#kafka.bootstrap-servers: ${spring.embedded.kafka.brokers:#{null}}
+spring:
+  kafka:
+    bootstrap-servers:  ${spring.embedded.kafka.brokers:#{not-set}}
+    consumer:
+      group-id: test-consumer-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+    client-id: test-data-consumer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    replicationFactor: 1
+
+topicConfig:
+  testTopic: kafka-spring-test-topic
+  partitionCount: 2
