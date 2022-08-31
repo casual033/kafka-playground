@@ -19,6 +19,11 @@ public class TestTopicBasicListener {
   public void onMessage(String message) {
     log.info("Consumer new message: {}", message);
     messages.add(message);
+    try {
+      Thread.sleep(250);
+    } catch (InterruptedException e) {
+      log.error("Can't sleep", e);
+    }
   }
 
   public List<String> getReceivedMessages() {
