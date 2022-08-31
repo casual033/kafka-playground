@@ -49,9 +49,9 @@ class TestTopicBasicListenerTest {
     } );
 
     Assertions.assertEquals(10, messages.size());
-    Assertions.assertEquals(testMessage + 1, messages.get(0));
-    Assertions.assertEquals(testMessage + 5, messages.get(4));
-    Assertions.assertEquals(testMessage + 10, messages.get(9));
+    Assertions.assertTrue(messages.contains(testMessage + 1));
+    Assertions.assertTrue(messages.contains(testMessage + 4));
+    Assertions.assertTrue(messages.contains(testMessage + 9));
 
   }
 

@@ -1,7 +1,9 @@
 package com.htecgroup.kafkaspringbasics.listeners;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestTopicBasicListener {
 
-  List<String> messages = new ArrayList<>();
+  Set<String> messages = new HashSet<>();
 
   @KafkaListener(
       topics = {"${topicConfig.testTopic}"},
@@ -20,13 +22,13 @@ public class TestTopicBasicListener {
     log.info("Consumer new message: {}", message);
     messages.add(message);
     try {
-      Thread.sleep(250);
+      Thread.sleep(200);
     } catch (InterruptedException e) {
       log.error("Can't sleep", e);
     }
   }
 
   public List<String> getReceivedMessages() {
-    return messages;
+    return new ArrayList<>(messages);
   }
 }
