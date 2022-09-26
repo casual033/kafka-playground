@@ -12,6 +12,7 @@ spring:
       auto-commit-interval: 30000
       properties:
         max.poll.interval.ms: 1000
+      enable-auto-commit: false
     client-id: test-data-consumer
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
