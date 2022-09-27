@@ -16,7 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @Slf4j
 @SpringBootTest
 @DirtiesContext
-@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9095", "port=9095" })
+@EmbeddedKafka(count = 3)
 class TestTopicBasicListenerTest {
 
   @Autowired

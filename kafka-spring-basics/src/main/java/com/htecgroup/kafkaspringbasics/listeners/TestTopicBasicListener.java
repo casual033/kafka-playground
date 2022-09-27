@@ -18,16 +18,14 @@ public class TestTopicBasicListener {
   @KafkaListener(
       topics = {"${topicConfig.testTopic}"},
       groupId = "${spring.kafka.consumer.group-id}" + "-basic"
+//      containerFactory = "manualAckKafkaListenerContainerFactory"
   )
-  public void onMessage(String message, Acknowledgment acknowledgment) {
-    log.info("Consumer new message: {}", message);
-    messages.add(message);
-    try {
-      Thread.sleep(250);
-      acknowledgment.acknowledge();
-    } catch (InterruptedException e) {
-      log.error("Can't sleep", e);
-    }
+  public void onMessage(String message) {
+
+//    for (String message : messages) {
+      log.info("Consumer new message: {}", message);
+      messages.add(message);
+//    }
   }
 
   public List<String> getReceivedMessages() {
