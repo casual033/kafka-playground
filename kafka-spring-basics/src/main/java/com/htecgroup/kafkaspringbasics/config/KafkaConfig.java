@@ -62,24 +62,17 @@ public class KafkaConfig {
     properties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
     properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-    properties.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
-
-    properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-    properties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5");
 
     return new DefaultKafkaConsumerFactory<>(properties);
   }
 
-  @Bean
+  @Bean(name = "transactionalConsumerFactory")
   public ConcurrentKafkaListenerContainerFactory<String, String>
   kafkaListenerContainerFactory() {
 
     ConcurrentKafkaListenerContainerFactory<String, String> factory =
         new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory(consumerFactory());
-
-    factory.getContainerProperties().setAckMode(AckMode.MANUAL_IMMEDIATE);
-    factory.setBatchListener(true);
 
     return factory;
   }

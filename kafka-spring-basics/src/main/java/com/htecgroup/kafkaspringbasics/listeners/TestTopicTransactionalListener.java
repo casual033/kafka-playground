@@ -10,17 +10,18 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class TestTopicBasicListener {
+public class TestTopicTransactionalListener {
 
   Set<String> messages = new HashSet<>();
 
   @KafkaListener(
-      topics = {"${topicConfig.testTopic}"},
-      groupId = "${spring.kafka.consumer.group-id}" + "-basic"
+      topics = {"${topicConfig.testTopic}-transactional"},
+      groupId = "${spring.kafka.consumer.group-id}" + "-transactional",
+      containerFactory = "transactionalConsumerFactory"
   )
   public void onMessage(String message) {
-      log.info("Consumer new message: {}", message);
-      messages.add(message);
+    log.info("Consumer new message: {}", message);
+    messages.add(message);
   }
 
   public List<String> getReceivedMessages() {

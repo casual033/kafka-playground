@@ -26,4 +26,9 @@ public class KafkaTopicConfig {
   public NewTopic dataIngestionTopic() {
     return new NewTopic(testTopic, 1, replicationFactor);
   }
+
+  @Bean
+  public NewTopic dataIngestionTransactionalTopic() {
+    return new NewTopic(testTopic + "-transactional", 1, replicationFactor);
+  }
 }
