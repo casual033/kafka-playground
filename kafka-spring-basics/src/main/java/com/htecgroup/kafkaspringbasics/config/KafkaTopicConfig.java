@@ -10,25 +10,18 @@ public class KafkaTopicConfig {
 
   private final String testTopic;
   private final Short replicationFactor;
-  private final Integer partitionCount;
 
   public KafkaTopicConfig(
       @Value("${topicConfig.testTopic}") String testTopic,
-      @Value("${topicConfig.partitionCount}") Integer partitionCount,
       @Value("${spring.kafka.replicationFactor}") Short replicationFactor
   ) {
     this.testTopic = testTopic;
     this.replicationFactor = replicationFactor;
-    this.partitionCount = partitionCount;
   }
 
   @Bean
-  public NewTopic dataIngestionTopic() {
+  public NewTopic newTopic() {
     return new NewTopic(testTopic, 1, replicationFactor);
   }
 
-  @Bean
-  public NewTopic dataIngestionTransactionalTopic() {
-    return new NewTopic(testTopic + "-transactional", 1, replicationFactor);
-  }
 }
