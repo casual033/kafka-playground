@@ -56,7 +56,7 @@ public class KafkaConfig {
     ConcurrentKafkaListenerContainerFactory<String, String> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory((ConsumerFactory<? super String, ? super String>) noAutoCommitConsumerFactory());
-    factory.getContainerProperties().setAckMode(AckMode.MANUAL);
+    factory.getContainerProperties().setAckMode(AckMode.MANUAL_IMMEDIATE);
     factory.setCommonErrorHandler(new DefaultErrorHandler((consumerRecord, e) -> {
       System.out.println(e);
       // send to DLQ for example
