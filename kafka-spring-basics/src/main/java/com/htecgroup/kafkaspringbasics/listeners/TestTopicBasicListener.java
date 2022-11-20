@@ -27,7 +27,7 @@ public class TestTopicBasicListener {
       if(message.equals("msg2")) {
           Thread.sleep(5000);
       }
-      acknowledgment.acknowledge();
+      // acknowledgment.acknowledge();
       messages.add(message);
 
   }

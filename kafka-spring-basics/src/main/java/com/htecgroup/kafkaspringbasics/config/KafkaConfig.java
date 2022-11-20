@@ -42,7 +42,7 @@ public class KafkaConfig {
     producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     producerProperties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
     producerProperties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 15000);
-    producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+    producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
     KafkaProducer<String, String> producer = new KafkaProducer<>(
         producerProperties);
