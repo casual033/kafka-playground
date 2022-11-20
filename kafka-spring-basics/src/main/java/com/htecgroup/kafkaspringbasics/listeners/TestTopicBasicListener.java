@@ -25,7 +25,9 @@ public class TestTopicBasicListener {
 
       log.info("Message received: {}", message);
       if(message.equals("msg3") || message.equals("msg4")) {
-          Thread.sleep(3500);
+          Thread.sleep(1500);
+      } else {
+          Thread.sleep(3000);
       }
       messages.add(message);
 
