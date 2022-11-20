@@ -42,7 +42,7 @@ public class KafkaConfig {
     producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     producerProperties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
     producerProperties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 15000);
-    producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+    producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
     KafkaProducer<String, String> producer = new KafkaProducer<>(
         producerProperties);
@@ -56,7 +56,7 @@ public class KafkaConfig {
     ConcurrentKafkaListenerContainerFactory<String, String> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory((ConsumerFactory<? super String, ? super String>) noAutoCommitConsumerFactory());
-    factory.getContainerProperties().setAckMode(AckMode.RECORD);
+    factory.getContainerProperties().setAckMode(AckMode.BATCH);
     factory.setCommonErrorHandler(new DefaultErrorHandler((consumerRecord, e) -> {
       System.out.println(e);
       // send to DLQ for example
