@@ -26,7 +26,7 @@ class TestTopicBasicListenerTest {
   TestTopicBasicListener consumer;
 
   @Test
-  public void givenEmbeddedKafkaBroker_whenSendingWithProducer_thenMessageReceivedManual() throws InterruptedException {
+  public void givenEmbeddedKafkaBroker_whenSendingWithProducer_thenMessageReceivedRecord() throws InterruptedException {
 
     producer.send("msg1");
     producer.send("msg2");
@@ -38,7 +38,7 @@ class TestTopicBasicListenerTest {
     long countMsg1 = messages.stream().filter(msg -> msg.equals("msg1")).count();
     long countMsg2 = messages.stream().filter(msg -> msg.equals("msg2")).count();
 
-    Assertions.assertNotEquals(1, countMsg1);
+    Assertions.assertEquals(1, countMsg1);
     Assertions.assertNotEquals(1, countMsg2);
   }
 }
