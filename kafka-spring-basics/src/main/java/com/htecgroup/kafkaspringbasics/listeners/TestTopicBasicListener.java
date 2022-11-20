@@ -1,29 +1,38 @@
 package com.htecgroup.kafkaspringbasics.listeners;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
 public class TestTopicBasicListener {
 
-  Set<String> messages = new HashSet<>();
+  List<String> messages = new ArrayList<>();
 
+  @SneakyThrows
   @KafkaListener(
       topics = {"${topicConfig.testTopic}"},
-      groupId = "${spring.kafka.consumer.group-id}" + "-basic"
+      groupId = "${spring.kafka.consumer.group-id}" + "-basic",
+      containerFactory = "customKafkaListenerContainerFactory"
   )
-  public void onMessage(String message) {
-      log.info("Consumer new message: {}", message);
+  public void onMessage(String message, Acknowledgment acknowledgment) {
+
+      log.info("Message received: {}", message);
+      if(message.equals("msg2")) {
+          Thread.sleep(6000);
+      }
+      acknowledgment.acknowledge();
       messages.add(message);
+
   }
 
   public List<String> getReceivedMessages() {
-    return new ArrayList<>(messages);
+    return messages;
   }
 }

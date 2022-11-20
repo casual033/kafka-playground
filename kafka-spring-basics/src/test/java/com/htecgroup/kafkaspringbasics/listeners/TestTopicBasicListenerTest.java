@@ -16,7 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @Slf4j
 @SpringBootTest
 @DirtiesContext
-@EmbeddedKafka(count = 3)
+@EmbeddedKafka(partitions = 1, topics = "${topicConfig.testTopic}", brokerProperties = {})
 class TestTopicBasicListenerTest {
 
   @Autowired
@@ -26,33 +26,19 @@ class TestTopicBasicListenerTest {
   TestTopicBasicListener consumer;
 
   @Test
-  public void givenEmbeddedKafkaBroker_whenSendingWithSimpleProducer_thenMessageReceived() throws InterruptedException {
+  public void givenEmbeddedKafkaBroker_whenSendingWithProducer_thenMessageReceivedManual() throws InterruptedException {
 
-    String testMessage = "test message ";
+    producer.send("msg1");
+    producer.send("msg2");
 
-    int messageCount = 0;
-    for (int i = 0; i < 10; i++) {
-      messageCount++;
-      producer.send(testMessage + messageCount);
-    }
-
-    Thread.sleep(10000);
+    Thread.sleep(30000);
     List<String> messages = consumer.getReceivedMessages();
 
-    log.info("Received total of: {} messages", messages.size());
+    Assertions.assertNotEquals(2, messages.size());
+    long countMsg1 = messages.stream().filter(msg -> msg.equals("msg1")).count();
+    long countMsg2 = messages.stream().filter(msg -> msg.equals("msg2")).count();
 
-    Map<String, Long> messagesCount = messages.stream()
-        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-    messagesCount.forEach((message,count) -> {
-      log.info("Received total of: {} times, message: {} ", count, message);
-    } );
-
-    Assertions.assertEquals(10, messages.size());
-    Assertions.assertTrue(messages.contains(testMessage + 1));
-    Assertions.assertTrue(messages.contains(testMessage + 4));
-    Assertions.assertTrue(messages.contains(testMessage + 9));
-
+    Assertions.assertNotEquals(1, countMsg1);
+    Assertions.assertNotEquals(1, countMsg2);
   }
-
 }
