@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
@@ -42,7 +43,7 @@ public class KafkaConfig {
     producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     producerProperties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
     producerProperties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 15000);
-    producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+    producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
     KafkaProducer<String, String> producer = new KafkaProducer<>(
         producerProperties);
@@ -56,7 +57,8 @@ public class KafkaConfig {
     ConcurrentKafkaListenerContainerFactory<String, String> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory((ConsumerFactory<? super String, ? super String>) noAutoCommitConsumerFactory());
-    factory.getContainerProperties().setAckMode(AckMode.MANUAL_IMMEDIATE);
+    factory.getContainerProperties().setAckMode(AckMode.COUNT);
+    factory.getContainerProperties().setAckCount(2);
     factory.setCommonErrorHandler(new DefaultErrorHandler((consumerRecord, e) -> {
       System.out.println(e);
       // send to DLQ for example
