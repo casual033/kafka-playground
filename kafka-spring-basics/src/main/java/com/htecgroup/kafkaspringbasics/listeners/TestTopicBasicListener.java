@@ -21,13 +21,12 @@ public class TestTopicBasicListener {
       groupId = "${spring.kafka.consumer.group-id}" + "-basic",
       containerFactory = "customKafkaListenerContainerFactory"
   )
-  public void onMessage(String message, Acknowledgment acknowledgment) {
+  public void onMessage(String message) {
 
       log.info("Message received: {}", message);
-      if(message.equals("msg2")) {
-          Thread.sleep(5000);
+      if(message.equals("msg3") || message.equals("msg4")) {
+          Thread.sleep(3500);
       }
-      // acknowledgment.acknowledge();
       messages.add(message);
 
   }
