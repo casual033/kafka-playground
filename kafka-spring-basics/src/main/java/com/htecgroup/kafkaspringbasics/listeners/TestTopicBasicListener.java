@@ -24,8 +24,8 @@ public class TestTopicBasicListener {
   public void onMessage(String message) {
 
       log.info("Message received: {}", message);
-      if(message.equals("msg2")) {
-          Thread.sleep(6000);
+      if(message.equals("msg1")) {
+          Thread.sleep(3000);
       }
       messages.add(message);
 
