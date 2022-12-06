@@ -3,7 +3,6 @@ package com.htecgroup.kafkaspringbasics.listeners;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ public class TestTopicBasicListener {
   public void onMessage(String message) {
 
       log.info("Message received: {}", message);
-      if(message.equals("msg1")) {
-          Thread.sleep(3000);
+      if(message.equals("msg2")) {
+          Thread.sleep(4000);
       }
       messages.add(message);
 
