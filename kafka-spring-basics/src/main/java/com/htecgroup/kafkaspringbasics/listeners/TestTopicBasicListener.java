@@ -24,10 +24,10 @@ public class TestTopicBasicListener {
   public void onMessage(String message, Acknowledgment acknowledgment) {
 
       log.info("Message received: {}", message);
+      acknowledgment.acknowledge();
       if(message.equals("msg2")) {
           Thread.sleep(5000);
       }
-      acknowledgment.acknowledge();
       messages.add(message);
 
   }

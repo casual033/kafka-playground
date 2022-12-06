@@ -34,11 +34,11 @@ class TestTopicBasicListenerTest {
     Thread.sleep(30000);
     List<String> messages = consumer.getReceivedMessages();
 
-    Assertions.assertNotEquals(2, messages.size());
+    Assertions.assertEquals(2, messages.size());
     long countMsg1 = messages.stream().filter(msg -> msg.equals("msg1")).count();
     long countMsg2 = messages.stream().filter(msg -> msg.equals("msg2")).count();
 
     Assertions.assertEquals(1, countMsg1);
-    Assertions.assertNotEquals(1, countMsg2);
+    Assertions.assertEquals(1, countMsg2);
   }
 }
