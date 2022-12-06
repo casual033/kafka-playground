@@ -2,23 +2,19 @@ package com.htecgroup.kafkaspringbasics.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Slf4j
 @Configuration
@@ -33,24 +29,35 @@ public class KafkaConfig {
   @Value("${kafka.auto.offset.reset:latest}")
   private String autoOffsetSetting;
 
-  @Bean(name="kafkaProducer")
-  public KafkaProducer<String, String> getKafkaProducer() {
+  @Bean(name="producerFactory")
+  public ProducerFactory<String, String> getProducerFactory() {
 
-    Properties producerProperties = new Properties();
-    producerProperties.put("bootstrap.servers", getBootstrapServers());
-    producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    producerProperties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
+    Map<String, Object> producerProperties = new HashMap<>();
     producerProperties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 15000);
+    producerProperties.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
+    producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
+    producerProperties.put(ProducerConfig.ACKS_CONFIG, "all");
+    producerProperties.put(ProducerConfig.RETRIES_CONFIG, 5);
+    producerProperties.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
+    producerProperties.put(ProducerConfig.LINGER_MS_CONFIG, 1);
+    producerProperties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+    producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+    producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
     producerProperties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
-    KafkaProducer<String, String> producer = new KafkaProducer<>(
-        producerProperties);
-
-    return producer;
+    return new DefaultKafkaProducerFactory<>(producerProperties);
   }
 
-  @Bean(name = "customKafkaListenerContainerFactory")
+  @Bean
+  public KafkaTemplate<String, String> kafkaTemplate() {
+    return new KafkaTemplate<>(getProducerFactory());
+  }
+
+  private String getBootstrapServers() {
+    return bootstrapServers;
+  }
+
+  @Bean
   public ConcurrentKafkaListenerContainerFactory<String, String> customKafkaListenerContainerFactory() {
 
     ConcurrentKafkaListenerContainerFactory<String, String> factory =
@@ -58,7 +65,6 @@ public class KafkaConfig {
     factory.setConsumerFactory((ConsumerFactory<? super String, ? super String>) noAutoCommitConsumerFactory());
     factory.getContainerProperties().setAckMode(AckMode.RECORD);
     factory.setCommonErrorHandler(new DefaultErrorHandler((consumerRecord, e) -> {
-      System.out.println(e);
       // send to DLQ for example
     }, new FixedBackOff(1000, 4)));
 
@@ -76,9 +82,5 @@ public class KafkaConfig {
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetSetting);
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
     return new DefaultKafkaConsumerFactory<>(props);
-  }
-
-  private String getBootstrapServers() {
-    return bootstrapServers;
   }
 }
