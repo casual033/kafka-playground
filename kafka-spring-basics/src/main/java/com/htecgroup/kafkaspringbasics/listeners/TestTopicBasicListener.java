@@ -24,10 +24,10 @@ public class TestTopicBasicListener {
   public void onMessage(String message) {
 
       log.info("Message received: {}", message);
-      if(message.equals("msg3") || message.equals("msg4")) {
-          Thread.sleep(1500);
+      if(message.equals("msg3")) {
+          Thread.sleep(5000);
       } else {
-          Thread.sleep(3000);
+          Thread.sleep(1000);
       }
       messages.add(message);
 

@@ -31,7 +31,6 @@ class TestTopicBasicListenerTest {
     producer.send("msg1");
     producer.send("msg2");
     producer.send("msg3");
-    producer.send("msg4");
 
     Thread.sleep(30000);
     List<String> messages = consumer.getReceivedMessages();
@@ -40,12 +39,10 @@ class TestTopicBasicListenerTest {
     long countMsg1 = messages.stream().filter(msg -> msg.equals("msg1")).count();
     long countMsg2 = messages.stream().filter(msg -> msg.equals("msg2")).count();
     long countMsg3 = messages.stream().filter(msg -> msg.equals("msg3")).count();
-    long countMsg4 = messages.stream().filter(msg -> msg.equals("msg4")).count();
 
     Assertions.assertEquals(1, countMsg1);
-    Assertions.assertNotEquals(1, countMsg2);
+    Assertions.assertEquals(1, countMsg2);
     Assertions.assertNotEquals(1, countMsg3);
-    Assertions.assertNotEquals(1, countMsg4);
 
   }
 }
