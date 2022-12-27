@@ -12,13 +12,6 @@ info:
     version: 1.0
 
 spring:
-  datasource:
-    url: jdbc:h2:mem:mydb
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
-  jpa:
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
   application:
     name: Kafka-spring playground
   kafka:
@@ -28,10 +21,16 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
+      max-poll-records: 5
+      max-poll-interval: 30
+      enable-auto-commit: false
+      ack-mode: manual-immediate
     client-id: test-data-consumer
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      linger-ms: 1
     replicationFactor: 1
 
 topicConfig:

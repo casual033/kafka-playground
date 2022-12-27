@@ -10,23 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestTopicBasicListener {
 
-  List<String> messages = new ArrayList<>();
-
   @KafkaListener(
       topics = {"${topicConfig.testTopic}"},
       groupId = "${spring.kafka.consumer.group-id}" + "-basic"
   )
   public void onMessage(String message) {
     log.info("Consumer new message: {}", message);
-    messages.add(message);
-    try {
-      Thread.sleep(250);
-    } catch (InterruptedException e) {
-      log.error("Can't sleep", e);
-    }
-  }
-
-  public List<String> getReceivedMessages() {
-    return messages;
   }
 }
